@@ -1,0 +1,46 @@
+services:
+  nginx:
+    image: nginx:latest
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d
+    depends_on:
+      - pgadmin4
+      - postgis
+      - awm_django_app
+
+  pgadmin4:
+    image: dpage/pgadmin4
+    ports:
+      - "20080:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: D18123630@mytudublin.ie
+      PGADMIN_DEFAULT_PASSWORD: Dang1998529
+
+  postgis:
+    image: kartoza/postgis:latest
+    container_name: postgis
+    ports:
+      - "25432:5432"
+    environment:
+      POSTGRES_USER: docker
+      POSTGRES_PASSWORD: docker
+      POSTGRES_DB: gis
+    volumes:
+      - postgis_data:/var/lib/postgresql/data
+
+  awm_django_app:
+    build: ./app  # 使用当前目录进行构建
+    ports:
+      - "8000:8000"
+    environment:
+      - DJANGO_SETTINGS_MODULE=advanced_web_mapping_ca1.settings
+    # command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - ./app:/app
+    depends_on:
+      - postgis
+
+volumes:
+  postgis_data:  # 这里定义 postgis_data 卷

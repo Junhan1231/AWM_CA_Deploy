@@ -1,0 +1,175 @@
+{% extends 'base.html' %}
+
+{% block title %}Map{% endblock %}
+
+{% block extra_head %}
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+{% endblock %}
+
+{% block content %}
+    <h3 class="mb-4">Map</h3>
+    <div id="map"></div>
+    <button id="update-location-btn" class="btn btn-primary rounded-pill px-4 py-2 mt-3" onclick="updateLocation()">Show My Location</button>
+    <button id="show-markers-btn" class="btn btn-secondary rounded-pill px-4 py-2 mt-3" onclick="showMarkers()">Display the Saved Marks</button>
+    <button id="show-landmarks-btn" class="btn btn-secondary rounded-pill px-4 py-2 mt-3" onclick="showLandmarks()">Show The Landmarks</button>
+    <button id="toggle-mode-btn" class="btn btn-secondary rounded-pill px-4 py-2 mt-3" onclick="toggleMode()">Toggle Night Mode</button>
+    <div id="manual-marker" class="mt-3"></div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+    var map = L.map('map').setView([53.0, -8.0], 6);
+
+    // Day and night layer
+    var dayLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    });
+    var nightLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+        attribution: '&copy; <a href="https://carto.com/">CARTO</a>'
+    });
+
+    // Display night
+    nightLayer.addTo(map);
+    var isNightMode = true;
+
+    function toggleMode() {
+        if (isNightMode) {
+            map.removeLayer(nightLayer);
+            map.addLayer(dayLayer);
+        } else {
+            map.removeLayer(dayLayer);
+            map.addLayer(nightLayer);
+        }
+        isNightMode = !isNightMode;
+    }
+
+    var marker;
+    var circle;
+    var currentLocation = null;
+    var mapMarkers = []; 
+    var landmarkMarkers = [];
+
+    //Function about User Update
+    function updateLocation() {
+        navigator.geolocation.getCurrentPosition(
+            function(position) {
+                var latitude = position.coords.latitude;
+                var longitude = position.coords.longitude;
+                var accuracy = position.coords.accuracy;
+
+                if (marker) map.removeLayer(marker);
+                if (circle) map.removeLayer(circle);
+
+                marker = L.marker([latitude, longitude]).addTo(map)
+                    .bindPopup("Your Location").openPopup();
+                circle = L.circle([latitude, longitude], { radius: accuracy }).addTo(map);
+                map.setView([latitude, longitude], 12);
+
+                currentLocation = { latitude: latitude, longitude: longitude };
+                calculateDistances();
+            },
+            function(error) {
+                console.error('Error getting location:', error);
+            }
+        );
+    }
+
+    // Function about user are able to click and save their favoir marks
+    map.on('click', function(e) {
+        const latitude = e.latlng.lat;
+        const longitude = e.latlng.lng;
+        const description = prompt("请输入标记描述:");
+
+        if (description) {
+            const markerData = { latitude, longitude, description };
+            const customMarker = L.marker([latitude, longitude]).addTo(map)
+                .bindPopup(`<b>${description}</b>`);
+            mapMarkers.push(customMarker);
+            saveMarker(markerData);
+        }
+    });
+
+    // Save the User Favoir Marks
+    function saveMarker(markerData) {
+        fetch('{% url "save_marker" %}', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json', 'X-CSRFToken': '{{ csrf_token }}'},
+            body: JSON.stringify(markerData)
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                console.log('标记已保存到数据库');
+                calculateDistances();
+            } else {
+                console.error('保存标记时出错');
+            }
+        })
+        .catch(error => console.error('请求失败:', error));
+    }
+
+    // Display the Saved Marks
+    function showMarkers() {
+        fetch('{% url "load_markers" %}')
+            .then(response => response.json())
+            .then(data => {
+                data.markers.forEach(markerData => {
+                    const customMarker = L.marker([markerData.latitude, markerData.longitude]).addTo(map)
+                        .bindPopup(`<b>${markerData.description}</b><br>Latitude: ${markerData.latitude}<br>Longitude: ${markerData.longitude}`);
+                    mapMarkers.push(customMarker);
+                });
+                calculateDistances();
+            })
+            .catch(error => console.error('Something Wrong when its loading:', error));
+    }
+
+    // Cauculate the distance 
+    function calculateDistances() {
+        if (!currentLocation) return;
+
+        let distancesOutput = "<ul>";
+        mapMarkers.forEach(marker => {
+            const latLng = marker.getLatLng();
+            const distance = getDistanceFromLatLonInKm(currentLocation.latitude, currentLocation.longitude, latLng.lat, latLng.lng);
+            distancesOutput += `<li><b>${marker.getPopup().getContent()}</b>: Distance ${distance.toFixed(2)} KM</li>`;
+        });
+        distancesOutput += "</ul>";
+        document.getElementById("manual-marker").innerHTML = distancesOutput;
+    }
+
+    // Display the land marks kinda hard code 
+    function showLandmarks() {
+        landmarkMarkers.forEach(marker => map.removeLayer(marker));
+        landmarkMarkers = [];
+
+        const famousLandmarks = [
+            { name: "Trinity College", latitude: 53.344, longitude: -6.256, description: "Famous university with Book of Kells." },
+            { name: "Guinness Storehouse", latitude: 53.341, longitude: -6.286, description: "Popular brewery experience with rooftop views." },
+            { name: "St. Patrick's Cathedral", latitude: 53.339, longitude: -6.271, description: "Ireland's largest cathedral with beautiful architecture." }
+        ];
+
+        famousLandmarks.forEach(landmark => {
+            const landmarkMarker = L.marker([landmark.latitude, landmark.longitude]).addTo(map)
+                .bindPopup(`<b>${landmark.name}</b><br>${landmark.description}`);
+            landmarkMarkers.push(landmarkMarker);
+        });
+    }
+
+    // Cauculate the distance
+    function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
+        const R = 6371;
+        const dLat = deg2rad(lat2 - lat1);
+        const dLon = deg2rad(lon2 - lon1);
+        const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                  Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *
+                  Math.sin(dLon / 2) * Math.sin(dLon / 2);
+        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        return R * c;
+    }
+
+    function deg2rad(deg) {
+        return deg * (Math.PI / 180);
+    }
+</script>
+{% endblock %}
