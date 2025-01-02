@@ -7,6 +7,7 @@ Student Name: Junhan Dang
 
 Final version project with Advanced Web Mapping CA2
 - Domain Link : https://awmcaproject.info/
+- First login please use UserTest with Pass: itisjunhantesting or just login with Guest
 
 # Advanced Web Mapping Project (AWM_CA)
 
