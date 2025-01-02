@@ -22,8 +22,13 @@ This project is an advanced web mapping application that integrates Django, Post
 
 ## Features
 
+- User login and Guest login
+- Check the user locations
+- Check the Roates
+- Check the Weather
+- Check the POIs
 - Location-based service using PostGIS for spatial data storage.
-- Interactive map rendering with Leaflet.js.
+- Interactive map rendering with Leaflet.js and OpenStreetmap.
 - Secure HTTPS access using Let's Encrypt SSL certificate.
 - Administrative interface through Django Admin.
 
