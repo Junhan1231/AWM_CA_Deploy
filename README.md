@@ -1,14 +1,11 @@
 # AWM_CA2
 
-# Hi Dr Raufi Bujar My Code located in AWM_CA Branch
+# Hi Dr Raufi Bujar I hope you have a Good Christmas and Happy new Year!
+
 Student Number: D18123630
 Student Name: Junhan Dang
-Final version project with local and server runing with diffrent repo
 
-- Student Number: D18123630
-- Student Name: Junhan Dang
-- Final version project with local and server runing with diffrent repo
-- Link: https://github.com/Junhan1231/AWM_CA_Deploy
+Final version project with Advanced Web Mapping CA2
 - Domain Link : https://awmcaproject.info/
 
 # Advanced Web Mapping Project (AWM_CA)
@@ -30,11 +27,6 @@ This project is an advanced web mapping application that integrates Django, Post
 - Secure HTTPS access using Let's Encrypt SSL certificate.
 - Administrative interface through Django Admin.
 
-## Prerequisites
-
-- Docker & Docker Compose
-- AWS account with a configured EC2 instance
-- [awmcaproject.info](http://awmcaproject.info/)
 
 
 
@@ -43,28 +35,23 @@ This project is an advanced web mapping application that integrates Django, Post
 ### Login
 ![LocalSiteMainPage](./WorkScreenShot/LocalSiteMainPage.png)
 
-### Starting page 
-![Starting Page](./WorkScreenShot/CAStartingPage.png)
-
 ### User current location
-![Current Location](./WorkScreenShot/CACurrentLocation.png)
+![MyLocation](./WorkScreenShot/MyLocation.png)
 
-### Database for landmarks
-![Landmark Database](./WorkScreenShot/CALandmarkDatabase.png)
+### POICheck
+![POICheck](./WorkScreenShot/POICheck.png)
 
-### Show the landmarks
-![Landmarks](./WorkScreenShot/CALandMarks.png)
+### Weather Check
+![Weather Check](./WorkScreenShot/Weather Check.png)
 
-### Trinity Saved marks
-![Trinity Landmark](./WorkScreenShot/CALanMarksTrnitity.png)
-
-## Data Migration 
-![Data Migration](./WorkScreenShot/Data%20migrate.png)
+### GetRote
+![GetRote](./WorkScreenShot/GetRote.png)
 
 
 
 ## Serer site Show Docker compose
-![Docker Containers](./WorkScreenShot/ServerPageDocker.png)
+![Docker Containers](./WorkScreenShot/CloudSite.png)
+![Docker Containers](./WorkScreenShot/ClouSiteDocker.png)
 
 ## Server site Function Screenshots
 ![Login Page](./WorkScreenShot/ServerPageLogin.png)
