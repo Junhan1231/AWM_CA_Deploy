@@ -1,17 +1,18 @@
 {% extends 'base.html' %}
 
-{% block title %}Login{% endblock %}
+{% block title %}My CA 3{% endblock %}
 
 {% block content %}
 <div class="login-container">
-    <h2>Login</h2>
+    <h2>This is MY CA 2</h2>
     <form method="post" class="login-form">
         {% csrf_token %}
         {{ form.as_p }}
         <button type="submit" class="btn-submit">Login</button>
+        <button onclick="location.href='{% url 'map' %}'" class="btn-guest">Guest Login</button>
     </form>
 </div>
-{% endblock %}
+{% endblock %} 
 
 {% block extra_head %}
 <style>
@@ -55,6 +56,24 @@
 
     .btn-submit:hover {
         background-color: #0056b3;
+
+    }
+
+    .btn-guest {
+        width: 100%;
+        padding: 10px;
+        margin-top: 15px;
+        font-size: 16px;
+        background-color: #28a745;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+
+    .btn-guest:hover {
+        background-color: #218838;
     }
 </style>
 {% endblock %}

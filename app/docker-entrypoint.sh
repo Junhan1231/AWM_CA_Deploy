@@ -1,7 +1,7 @@
 #!/bin/bash
 
 
-# Activate the conda environment
+# auto ctivate the conda environment
 echo "Activating conda environment..."
 source /opt/conda/etc/profile.d/conda.sh
 conda activate awm_env
@@ -13,7 +13,7 @@ until pg_isready -h postgis -p 5432; do
 done
 >&2 echo "Postgres is up - executing command"
 
-# Make migrations
+# Auto make migrations
 echo "Making migrations..."
 python manage.py makemigrations
 
