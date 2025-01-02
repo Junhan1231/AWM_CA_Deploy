@@ -50,18 +50,14 @@ This project is an advanced web mapping application that integrates Django, Post
 
 
 ## Serer site Show Docker compose
-![Docker Containers](./WorkScreenShot/CloudSite.png)
-![Docker Containers](./WorkScreenShot/ClouSiteDocker.png)
-
-## Server site Function Screenshots
-![Login Page](./WorkScreenShot/ServerPageLogin.png)
+![WebAndClouSite](./WorkScreenShot/WebAndClouSite.png)
+![Docker Containers](./WorkScreenShot/ClientSiteMain.png)
 
 
-## Serer site Show user favor Location before
-![Docker Containers](./WorkScreenShot/ServerPageSavedMarks.png)
+## BackEND saved Marks
+![WebAndClouSite](./WorkScreenShot/BackENdM.png)
 
-## Serer site Dublin Landmarks
-![Docker Containers](./WorkScreenShot/ServerPageLanMark.png)
+
 
 
 
