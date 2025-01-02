@@ -42,7 +42,7 @@ This project is an advanced web mapping application that integrates Django, Post
 ![POICheck](./WorkScreenShot/POICheck.png)
 
 ### Weather Check
-![Weather Check](./WorkScreenShot/Weather Check.png)
+![Weather Check](./WorkScreenShot/Weather%20Check.png)
 
 ### GetRote
 ![GetRote](./WorkScreenShot/GetRote.png)
